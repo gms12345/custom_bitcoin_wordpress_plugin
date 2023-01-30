@@ -11,12 +11,12 @@
  *
  */
 
-define('BITCOIN_WP', true);
-define('PLUGINS_DIR_PATH',plugin_dir_path(__FILE__));
-define('HOME_URL',home_url());
-define('ADMIN_URL',get_admin_url());
-define('plugins_url', plugins_url());
-define('C_BITCOIN_URL', plugins_url.'/custom-bitcoin/');
+   define('BITCOIN_WP', true);
+   define('PLUGINS_DIR_PATH',plugin_dir_path(__FILE__));
+   define('HOME_URL',home_url());
+   define('ADMIN_URL',get_admin_url());
+   define('plugins_url', plugins_url());
+   define('C_BITCOIN_URL', plugins_url.'/custom-bitcoin/');
 
 
 /*
@@ -32,10 +32,11 @@ define('C_BITCOIN_URL', plugins_url.'/custom-bitcoin/');
    
    function c_bitcoin_plugin_activate(){
    global $wpdb,$table_prefix;
-    $wp_invoices = $table_prefix.'c_bit_invoices';
-    $wp_orders   = $table_prefix.'c_bit_orders';
-    $wp_payments = $table_prefix.'c_bit_payments';
-    $wp_products = $table_prefix.'c_bit_products';
+    $wp_invoices  = $table_prefix.'c_bit_invoices';
+    $wp_orders    = $table_prefix.'c_bit_orders';
+    $wp_payments  = $table_prefix.'c_bit_payments';
+    $wp_products  = $table_prefix.'c_bit_products';
+    $wp_c_bit_api = $table_prefix.'c_bit_api';
 
 
   // Table structure for table `invoices`
@@ -60,6 +61,11 @@ define('C_BITCOIN_URL', plugins_url.'/custom-bitcoin/');
 
   $qry4 = "CREATE TABLE IF NOT EXISTS $wp_products(`id` INT NOT NULL AUTO_INCREMENT , `name` VARCHAR(255) NOT NULL , `description` LONGTEXT NOT NULL , `price` FLOAT(10,2) NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB DEFAULT CHARSET=latin1;";
   $wpdb->query($qry4);
+
+    // Table structure for table `products`
+
+  $qry5 = "CREATE TABLE IF NOT EXISTS $wp_c_bit_api(`id` INT NOT NULL AUTO_INCREMENT , `api` VARCHAR(255) NOT NULL , `add_on` TIMESTAMP NOT NULL , `status` INT NOT NULL , PRIMARY KEY (`id`)) ENGINE = InnoDB DEFAULT CHARSET=latin1;";
+  $wpdb->query($qry5);
 
    $data1 = array(
    'name' => 'Premium',
@@ -86,6 +92,7 @@ function c_bitcoin_plugin_deactivation(){
     $wp_orders   = $table_prefix.'c_bit_orders';
     $wp_payments = $table_prefix.'c_bit_payments';
     $wp_products = $table_prefix.'c_bit_products';
+    $wp_c_bit_api = $table_prefix.'c_bit_api';
 
     $qry1 = "TRUNCATE $wp_invoices";
     $wpdb->query($qry1);
@@ -98,6 +105,9 @@ function c_bitcoin_plugin_deactivation(){
 
     $qry4 = "TRUNCATE $wp_products";
     $wpdb->query($qry4);
+
+    $qry5 = "TRUNCATE $wp_c_bit_api";
+    $wpdb->query($qry5);
 }
 register_deactivation_hook(__FILE__, 'c_bitcoin_plugin_deactivation'); 
 
