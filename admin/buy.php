@@ -10,11 +10,11 @@ if(!isset($_GET['id'])){
     // If no ID found, exit
     exit();
 }
-$id = mysqli_real_escape_string($conn, $_GET['id']);
+$id =  $_GET['id'];
 
 $price = getPrice($id);
 
 $code = createInvoice($id, $price);
 
-echo "<script>window.location='invoice.php?code=".$code."'</script>";
+echo "<script>window.location='admin.php?page=invoice&code=".$code."'</script>";
 ?>

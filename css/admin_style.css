@@ -1,3 +1,7 @@
+/* Google font open sans */
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;500;600;700;800&display=swap');
+
+
 /* Admin dashboard style css */
 .logo-box{
 width: 326px;
@@ -38,4 +42,35 @@ width: 326px;
 	border:1px solid rgba(0, 0, 0, 0.9);
 	border-radius: 5px 0px 0px 5px;
 	padding-bottom: 3px;
+}
+
+
+.test-payment-container table{
+   font-size: 13px!important;
+   font-family: 'Open Sans', sans-serif!important;
+}
+
+.test-payment-container table a{
+  box-shadow: none!important;
+}
+
+
+/*invoice page design */
+.pay-box-main{
+  padding: 20px 80px!important;
+}
+
+.pay-box-main .col-right{
+  padding-top: 30px!important;
+}
+
+.invoice-logo-box{
+    height: 46px;
+    width: 85%;
+    margin-bottom: 20px;
+}
+
+.invoice-logo-box img{
+	height: 100%;
+	width: 100%;
 }

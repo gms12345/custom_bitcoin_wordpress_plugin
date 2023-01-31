@@ -1,7 +1,7 @@
 <?php
     // Blockonmics API stuff
-    $apikey = "";
-    $url = "https://www.blockonomics.co/api/";
+    $apikey = " ".API." ";
+    $url = " ".API_URL." ";
     
     $options = array( 
         'http' => array(
@@ -12,6 +12,4 @@
         )   
     );
 
-    // Connection info
-    $conn = mysqli_connect("localhost", "root", "", "bitcoin"); // enter your info
 ?>

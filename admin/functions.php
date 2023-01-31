@@ -5,6 +5,7 @@ This page defines a number of functions to make the code on other pages more rea
 
 include_once "config.php";
 
+
 function generateRandomString($length = 10) {
     $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
     $charactersLength = strlen($characters);
@@ -16,8 +17,8 @@ function generateRandomString($length = 10) {
 }
 
 function generateAddress(){
-    global $apikey;
-    global $url;
+     $apikey = API;
+     $url = API_URL;
     $options = array( 
         'http' => array(
             'header'  => 'Authorization: Bearer '.$apikey,
@@ -42,105 +43,113 @@ function generateAddress(){
 }
 
 function createInvoice($product, $price){
-    global $conn;
+    global $wpdb,$table_prefix;
+    $wp_invoices  = $table_prefix.'c_bit_invoices';
+
     $code = generateRandomString(25);
     $address = generateAddress();
     $status = -1;
     $ip = getIp();
-    $sql = "INSERT INTO `invoices` (`code`, `address`, `price`, `status`, `product`,`ip`)
-    VALUES ('$code', '$address', '$price', '$status', '$product', '$ip')";
-    mysqli_query($conn, $sql);
+
+    $sql = $wpdb->prepare(
+    "INSERT INTO $wp_invoices(`code`, `address`, `price`, `status`, `product`,`ip`)
+    VALUES ('$code', '$address', '$price', '$status', '$product', '$ip')");
+    $wpdb->query($sql);
     return $code;
 }
 
 function getProduct($id){
-    global $conn;
-    $sql = "SELECT * FROM `products` WHERE `id`='$id'";
-    $result = mysqli_query($conn, $sql);
-    while($row = mysqli_fetch_assoc($result)){
-        return $row['name'];
-    }
+    global $wpdb,$table_prefix;
+    $wp_products  = $table_prefix.'c_bit_products';
+
+    $result = $wpdb->get_row("SELECT * FROM $wp_products WHERE id='".$id."' ");
+    $name =  $result->name;
+
+    return $name;
 }
 
 function getPrice($id){
-    global $conn;
-    $sql = "SELECT * FROM `products` WHERE `id`='$id'";
-    $result = mysqli_query($conn, $sql);
-    while($row = mysqli_fetch_assoc($result)){
-        return $row['price'];
-    }
+    global $wpdb,$table_prefix;
+    $wp_products  = $table_prefix.'c_bit_products';
+    
+    echo $id;
+    $result = $wpdb->get_row("SELECT * FROM $wp_products WHERE id='".$id."' ");
+    $price =  $result->price;
+
+    return $price;
 }
 
 function getAddress($code){
-    global $conn;
-    $sql = "SELECT * FROM `invoices` WHERE `code`='$code'";
-    $result = mysqli_query($conn, $sql);
-    $address = "Error, try again";
-    while($row = mysqli_fetch_assoc($result)){
-        $address = $row['address'];
-    }
+    global $wpdb,$table_prefix;
+    $wp_invoices  = $table_prefix.'c_bit_invoices';
+
+    $result = $wpdb->get_row("SELECT * FROM $wp_invoices WHERE code='".$code."' ");
+    $address =  $result->address;
+
     return $address;
 }
 
 function getStatus($code){
-    global $conn;
-    $sql = "SELECT * FROM `invoices` WHERE `code`='$code'";
-    $result = mysqli_query($conn, $sql);
+    global $wpdb,$table_prefix;
+    $wp_invoices  = $table_prefix.'c_bit_invoices';
+
+    $result = $wpdb->get_row("SELECT * FROM $wp_invoices WHERE code='".$code."' ");
     $status = "Error, try again";
-    while($row = mysqli_fetch_assoc($result)){
-        $status = $row['status'];
-    }
+    $status =  $result->status;
+
     return $status;
 }
 
 function getInvoiceProduct($code){
-    global $conn;
-    $sql = "SELECT * FROM `invoices` WHERE `code`='$code'";
-    $result = mysqli_query($conn, $sql);
+    global $wpdb,$table_prefix;
+    $wp_invoices  = $table_prefix.'c_bit_invoices';
+
+    $result = $wpdb->get_row("SELECT * FROM $wp_invoices WHERE code='".$code."' ");
     $product = "Error, try again";
-    while($row = mysqli_fetch_assoc($result)){
-        $product = $row['product'];
-    }
+    $product =  $result->product;
+
     return $product;
 }
 
 function getInvoicePrice($code){
-    global $conn;
-    $sql = "SELECT * FROM `invoices` WHERE `code`='$code'";
-    $result = mysqli_query($conn, $sql);
+    global $wpdb,$table_prefix;
+    $wp_invoices  = $table_prefix.'c_bit_invoices';
+
+    $result = $wpdb->get_row("SELECT * FROM $wp_invoices WHERE code='".$code."' ");
     $price = "Error, try again";
-    while($row = mysqli_fetch_assoc($result)){
-        $price = $row['price'];
-    }
+    $price =  $result->price;
+
     return $price;
 }
 
 function GetCode($address){
-    global $conn;
-    $sql = "SELECT * FROM `invoices` WHERE `address`='$address'";
-    $result = mysqli_query($conn, $sql);
+    global $wpdb,$table_prefix;
+    $wp_invoices  = $table_prefix.'c_bit_invoices';
+
+    $result = $wpdb->get_row("SELECT * FROM $wp_invoices WHERE address='".$address."' ");
     $code = "Error, try again";
-    while($row = mysqli_fetch_assoc($result)){
-        $code = $row['code'];
-    }
+    $code =  $result->code;
+   
     return $code;
 }
 
 function getDescription($product){
-    global $conn;
-    $sql = "SELECT * FROM `products` WHERE `id`='$product'";
-    $result = mysqli_query($conn, $sql);
+    global $wpdb,$table_prefix;
+    $wp_products  = $table_prefix.'c_bit_products';
+    
+    $result = $wpdb->get_row("SELECT * FROM $wp_products WHERE id='".$product."' ");
     $description = "Error, try again";
-    while($row = mysqli_fetch_assoc($result)){
-        $description = $row['description'];
-    }
+    $description =  $result->description;
+
     return $description;
 }
 
 function updateInvoiceStatus($code, $status){
-    global $conn;
-    $sql = "UPDATE `invoices` SET `status`='$status' WHERE `code`='$code'";
-    mysqli_query($conn, $sql);
+    global $wpdb,$table_prefix;
+    $wp_invoices  = $table_prefix.'c_bit_invoices';
+
+    $sql =  $wpdb->update($wp_invoices, array('status'=>$status) ,array('code'=>$code));
+
 }
 
 function getBTCPrice($currency){
@@ -161,13 +170,13 @@ function USDtoBTC($amount){
 }
 
 function getInvoice($addr){
-    global $conn;
-    $sql = "SELECT * FROM `invoices` WHERE `address`='$addr'";
-    $result = mysqli_query($conn, $sql);
+    global $wpdb,$table_prefix;
+    $wp_invoices  = $table_prefix.'c_bit_invoices';
+
+    $result = $wpdb->get_row("SELECT * FROM $wp_invoices WHERE address='".$addr."' ");
     $invoice = "Error, try again";
-    while($row = mysqli_fetch_assoc($result)){
-        $invoice = $row['code'];
-    }
+    $invoice =  $result->code;
+
     return $invoice;
 }
 
@@ -185,20 +194,26 @@ function getIp(){
 }
 
 function createOrder($invoice, $ip){
-    global $conn;
-    
-    $sql = "INSERT INTO `orders` (`invoice`, `ip`) VALUES ('$invoice', '$ip')";
-    mysqli_query($conn, $sql);
+    global $wpdb,$table_prefix;
+    $wp_orders    = $table_prefix.'c_bit_orders';
+
+
+    $sql = $wpdb->prepare(
+    "INSERT INTO $wp_orders(`invoice`,`ip`)VALUES ('$invoice', '$ip')");
+    $wpdb->query($sql);
 }
 
 function getInvoiceIp($addr){
-    global $conn;
-    $sql = "SELECT * FROM `invoices` WHERE `address`='$addr'";
-    $result = mysqli_query($conn, $sql);
+    global $wpdb,$table_prefix;
+    $wp_invoices  = $table_prefix.'c_bit_invoices';
+
+    $result = $wpdb->get_row("SELECT * FROM $wp_invoices WHERE address='".$addr."' ");
     $ip = "Error, try again";
-    while($row = mysqli_fetch_assoc($result)){
-        $ip = $row['ip'];
+
+    foreach ($result as $row){
+      $ip =  $row->ip;
     }
+
     return $ip;
 }
 ?>

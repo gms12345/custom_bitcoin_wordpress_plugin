@@ -1,6 +1,12 @@
-<?php include('header.php');
+<?php 
+include('header.php');
+include_once "config.php";
+include_once "functions.php";
+
+
 global $wpdb,$table_prefix;  
     $wp_c_bit_api = $table_prefix.'c_bit_api';
+    $wp_products  = $table_prefix.'c_bit_products';
     @$result = $wpdb->get_results("SELECT * FROM $wp_c_bit_api");
     @$f_api  = $result[0]->api;
     @$f_id  = $result[0]->id;
@@ -40,7 +46,6 @@ if (isset($_POST['submit'])) {
       }
  }
 
-
  
  ?>
 
@@ -69,12 +74,49 @@ if (isset($_POST['submit'])) {
 		<form action="" method="post">
 			<input type="submit" style="<?php if(isset($f_api)){echo 'display:block';}else{echo 'display:none';} ?>" class="btn-danger border border-danger btn  shadow-none" name="del_api"  id="" value="Remove Api Key">
 		</form>
+
+
+		<div class="container-fluid p-0 mt-5 test-payment-container">
+			<h5>Test Payment</h5>
+			<div class="table-responsive">
+
+			<table class="table">
+				<thead>
+					<tr>
+						<td>ID</td>
+						<td>NAME</td>
+						<td>DESCRIPTION</td>
+						<td>PRICE</td>
+						<td>ACTION</td>
+					</tr>
+				</thead>
+				<tbody>
+				<?php 
+                 $result = $wpdb->get_results("SELECT * FROM $wp_products");
+                 foreach ($result as $value) { ?>
+					<tr>
+						<td><?php echo $value->id ?></td>
+						<td><?php echo $value->name ?></td>
+						<td><?php echo $value->description ?></td>
+						<td class="text-primary font-weight-bold"><?php echo $value->price ?></td>
+						<td>
+						  <a href="admin.php?page=buy&id=<?php echo $value->id; ?>" style="text-decoration: none;" class="btn-sm border border-success btn-outline-success">Test now</a>
+						</td>
+					</tr>
+				<?php } ?>
+				</tbody>
+			</table>
+
+	</div>
+		</div>
 		
 	</div>
 	<div class="col-sm-12 col-lg-6 col-md-6">
 		
 	</div>
 </div>
+
+
 
 	
 </div>

@@ -19,14 +19,13 @@
    define('C_BITCOIN_URL', plugins_url.'/custom-bitcoin/');
 
 
-   global $wpdb,$table_prefix;
-    $wp_invoices  = $table_prefix.'c_bit_invoices';
-    $wp_orders    = $table_prefix.'c_bit_orders';
-    $wp_payments  = $table_prefix.'c_bit_payments';
-    $wp_products  = $table_prefix.'c_bit_products';
+    global $wpdb,$table_prefix;  
     $wp_c_bit_api = $table_prefix.'c_bit_api';
-
-    
+    @$result = $wpdb->get_results("SELECT * FROM $wp_c_bit_api");
+    @$fetch_apikey  = $result[0]->api;
+    define('API',@$fetch_apikey);
+    define('API_URL','https://www.blockonomics.co/api/');
+ 
    
 
 
@@ -137,22 +136,26 @@ register_deactivation_hook(__FILE__, 'c_bitcoin_plugin_deactivation');
 
 
 function custom_bitcoin_admin_menu() {
-	add_menu_page('Bitcoin', 'Truamore Payment', 'read', 'Bitcoin', 'custom_bitcoin_admin_action', C_BITCOIN_URL . 'media/bitcoin_icon.svg');
+
+   add_menu_page( 'Bitcoin', 'Truamore Pay', 'read', 'Bitcoin',  'custom_bitcoin_admin_action',C_BITCOIN_URL . 'media/bitcoin_icon.svg');
+   add_submenu_page('Bitcoin', 'Settings', 'Buy', 'manage_options', 'buy', 'custom_bitcoin_admin_buy_action');
+   add_submenu_page('Bitcoin', 'Settings', 'invoice', 'manage_options', 'invoice', 'custom_bitcoin_admin_invoice_action');
 }
 
 function custom_bitcoin_admin_action(){
    include('admin/dashboard.php');
 }
 
-function custom_bitcoin_admin_setting_action(){
-   include('admin/settings.php');
+function custom_bitcoin_admin_buy_action(){
+   include('admin/buy.php');
+}
+
+function custom_bitcoin_admin_invoice_action(){
+   include('admin/invoice.php');
 }
 
 
 add_action('admin_menu', 'custom_bitcoin_admin_menu');
-//add_action('network_admin_menu', 'custom_bitcoin_admin_menu');
-
-
 
 
  ?>
