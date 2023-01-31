@@ -19,6 +19,17 @@
    define('C_BITCOIN_URL', plugins_url.'/custom-bitcoin/');
 
 
+   global $wpdb,$table_prefix;
+    $wp_invoices  = $table_prefix.'c_bit_invoices';
+    $wp_orders    = $table_prefix.'c_bit_orders';
+    $wp_payments  = $table_prefix.'c_bit_payments';
+    $wp_products  = $table_prefix.'c_bit_products';
+    $wp_c_bit_api = $table_prefix.'c_bit_api';
+
+    
+   
+
+
 /*
  * ----------------------------------------------------------
  * # FOR SECURITY
